@@ -1,0 +1,4 @@
+.env
+.eslintrc.json
+mode_modules
+package-lock.json

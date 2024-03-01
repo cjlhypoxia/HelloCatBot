@@ -16,12 +16,11 @@ module.exports = {
 			option.setName('chat').setDescription('chat').setRequired(true)),
 	async execute(interaction) {
 		const prompt = interaction.options.getString('chat');
-		const { user } = interaction;
+		const user = interaction;
 		const pathfile = path.resolve('./Data/Prompt', `${user.id}_prompt.json`);
 		await interaction.deferReply();
 		if (fs.existsSync(pathfile)) {
 			runChat();
-			console.log(true);
 		}
 		else {
 			const data = { 'message' : [] };

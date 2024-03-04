@@ -3,11 +3,11 @@ const path = require('path');
 const fs = require('fs');
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('deletegoogle')
-		.setDescription('delete google ai history'),
+		.setName('deletegemini')
+		.setDescription('刪除與Gemini的對話內容'),
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
-		const user = interaction;
+		const { user } = interaction;
 		const pathfile = path.resolve('./Data/Prompt', `${user.id}_prompt.json`);
 		if (fs.existsSync(pathfile)) {
 			fs.unlinkSync(pathfile);

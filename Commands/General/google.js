@@ -10,13 +10,13 @@ const fs = require('fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('google')
-		.setDescription('google ai')
+		.setName('gemini')
+		.setDescription('跟Gemini聊聊天')
 		.addStringOption(option =>
-			option.setName('chat').setDescription('chat').setRequired(true)),
+			option.setName('內容').setDescription('輸入問題或對話').setRequired(true)),
 	async execute(interaction) {
-		const prompt = interaction.options.getString('chat');
-		const user = interaction;
+		const prompt = interaction.options.getString('內容');
+		const { user } = interaction;
 		const pathfile = path.resolve('./Data/Prompt', `${user.id}_prompt.json`);
 		await interaction.deferReply();
 		if (fs.existsSync(pathfile)) {

@@ -77,6 +77,7 @@ module.exports = {
 				if (data.length != 0 && data[0].Aichannelid != null) {
 					if (channelId == data[0].Aichannelid) {
 						aichat();
+						message.channel.sendTyping();
 					}
 					else {
 						return;

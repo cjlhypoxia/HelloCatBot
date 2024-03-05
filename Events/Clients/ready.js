@@ -7,15 +7,9 @@ module.exports = {
 	once: true,
 	async execute(client) {
 		await mongoose.connect(mongodb)
-			.then(() => console.log('Connected!'));
-		if (mongoose.connect) {
-			console.log('MongoDB連接成功');
-		}
-		// if (Levels.setURL(mongodb)) {
-		//	console.log('MongoDB設定成功');
-		// }
+			.then(() => console.log('MongoDB已連接'));
 		client.user.setPresence({ status: 'dnd' });
-		client.user.setActivity('試試 /google', { type: ActivityType.Playing });
+		client.user.setActivity('試試 /gemini', { type: ActivityType.Playing });
 		console.log(`Ready! ${client.user.tag} 上線`);
 	},
 };

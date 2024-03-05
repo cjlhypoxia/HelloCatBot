@@ -1,11 +1,17 @@
 // Require the necessary discord.js classes
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const dotenv = require('dotenv');
 dotenv.config();
+
+const { loadEvents } = require('./Handlers/eventHandler');
+const { loadCommands } = require('./Handlers/commandHandler');
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [Object.keys(GatewayIntentBits)],
+	partials: [Object.keys(Partials)],
+});
 // Commands
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
@@ -33,6 +39,7 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
 	const event = require(filePath);
+	console.log(filePath, event);
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
 	}
@@ -40,5 +47,8 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
-
-client.login(process.env.BotToken);
+module.exports = client;
+client.login(process.env.BotToken).then(() => {
+	loadEvents(client);
+	loadCommands(client);
+});

@@ -21,7 +21,7 @@ module.exports = {
 				.setDescription('開啟或關閉機器人自動反應表情')
 				.addBooleanOption(option => option
 					.setName('選擇')
-					.setDescription('選擇開啟或關閉')
+					.setDescription('選擇開啟(True)或關閉(False)')
 					.setRequired(true),
 				),
 		),
@@ -32,10 +32,9 @@ module.exports = {
 		if (user.id !== guild.ownerId) {
 			return interaction.editReply({ content: '你沒有權限更改設定。', ephemeral: true });
 		}
-		else if (subcommandname === 'gemini設定') {
+		else if (subcommandname === 'gemini頻道設定') {
 			const textchannel = options.getChannel('頻道');
 			await settingSchema.find({ Guild: guild.id }).then(async (data) => {
-				console.log(data.length);
 				if (data.length == 0) {
 					settingSchema.create({
 						Guild: guild.id,
@@ -51,12 +50,27 @@ module.exports = {
 					});
 				}
 			}).catch((err) => console.log(err));
-			return interaction.editReply({ content: '設定成功。', ephemeral: true });
+			return interaction.editReply({ content: `成功設定頻道為 <#${textchannel.id}>。`, ephemeral: true });
 		}
 		else {
 			const boolenoption = options.getBoolean('選擇');
-			console.log(boolenoption);
-			return interaction.editReply({ content: '設定成功。', ephemeral: true });
+			await settingSchema.find({ Guild: guild.id }).then(async (data) => {
+				if (data.length == 0) {
+					settingSchema.create({
+						Guild: guild.id,
+						Aichannelid: null,
+						Reactoption: boolenoption,
+					});
+				}
+				else {
+					const filter = { Guild: guild.id };
+					const update = { Reactoption: boolenoption };
+					await settingSchema.findOneAndUpdate(filter, update, {
+						new: true,
+					});
+				}
+			}).catch((err) => console.log(err));
+			return interaction.editReply({ content: `成功設定為${boolenoption}。`, ephemeral: true });
 		}
 	},
 };

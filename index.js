@@ -14,7 +14,7 @@ const client = new Client({
 });
 // Commands
 client.commands = new Collection();
-const foldersPath = path.join(__dirname, 'commands');
+/** const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
@@ -31,9 +31,9 @@ for (const folder of commandFolders) {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
-}
+}*/
 // Events
-const eventsPath = path.join(__dirname, 'events');
+/** const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
@@ -46,7 +46,7 @@ for (const file of eventFiles) {
 	else {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
-}
+}*/
 module.exports = client;
 client.login(process.env.BotToken).then(() => {
 	loadEvents(client);

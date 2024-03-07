@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const settingSchema = require('../../Models/setting.js');
+const path = require('path');
+const fs = require('fs');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('setting')
@@ -24,6 +26,11 @@ module.exports = {
 					.setDescription('選擇開啟(True)或關閉(False)')
 					.setRequired(true),
 				),
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('伺服器gemini對話紀錄')
+				.setDescription('重置伺服器gemini對話紀錄'),
 		),
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
@@ -52,7 +59,7 @@ module.exports = {
 			}).catch((err) => console.log(err));
 			return interaction.editReply({ content: `成功設定頻道為 <#${textchannel.id}>。`, ephemeral: true });
 		}
-		else {
+		else if (subcommandname === '訊息反應設定') {
 			const boolenoption = options.getBoolean('選擇');
 			await settingSchema.find({ Guild: guild.id }).then(async (data) => {
 				if (data.length == 0) {
@@ -71,6 +78,17 @@ module.exports = {
 				}
 			}).catch((err) => console.log(err));
 			return interaction.editReply({ content: `成功設定為${boolenoption}。`, ephemeral: true });
+		}
+		else {
+			const { guildId } = interaction;
+			const pathfile = path.resolve('./Data/Prompt', `${guildId}_guild_prompt.json`);
+			if (fs.existsSync(pathfile)) {
+				fs.unlinkSync(pathfile);
+				return interaction.editReply('已刪除對話紀錄');
+			}
+			else {
+				return interaction.editReply('刪除失敗，尚未有對話紀錄');
+			}
 		}
 	},
 };

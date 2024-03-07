@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('deletegemini')
-		.setDescription('刪除與Gemini的對話內容'),
+		.setDescription('刪除自己與Gemini的對話內容'),
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 		const { user } = interaction;

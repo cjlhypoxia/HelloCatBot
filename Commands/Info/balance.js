@@ -5,6 +5,7 @@ const apiKey = process.env.STABILITY_API_KEY;
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
+	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('balance')
 		.setDescription('看看還可以使用毛毛多少錢'),

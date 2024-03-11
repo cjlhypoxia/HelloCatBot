@@ -13,6 +13,7 @@ const client = new Client({
 	partials: [Object.keys(Partials)],
 });
 // Commands
+client.cooldowns = new Collection();
 client.commands = new Collection();
 /** const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);

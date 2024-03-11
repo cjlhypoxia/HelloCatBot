@@ -7,6 +7,7 @@ const engineId = 'stable-diffusion-xl-1024-v1-0';
 const url = `https://api.stability.ai/v1/generation/${engineId}/text-to-image`;
 const apiKey = process.env.STABILITY_API_KEY;
 module.exports = {
+	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('image')
 		.setDescription('用文字生成圖片（Stable Diffusion XL 1.0）')

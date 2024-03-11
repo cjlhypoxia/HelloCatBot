@@ -9,6 +9,7 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = {
+	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('gemini')
 		.setDescription('跟Gemini聊聊天')

@@ -10,12 +10,15 @@
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
+    "@iamtraction/google-translate": "github:iamtraction/google-translate",
     "ascii-table": "^0.0.9",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
-    "mongoose": "^8.2.0"
+    "mongoose": "^8.2.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "eslint": "^8.57.0"
-  }
+  },
+  "type": "commonjs"
 }

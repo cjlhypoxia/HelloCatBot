@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
+const { SlashCommandBuilder, AttachmentBuilder, inlineCode } = require('discord.js');
 const translate = require('@iamtraction/google-translate');
 /* eslint-disable no-shadow */
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
@@ -9,15 +9,14 @@ const apiKey = process.env.STABILITY_API_KEY;
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('image')
-		.setDescription('用文字生成圖片')
+		.setDescription('用文字生成圖片（Stable Diffusion XL 1.0）')
 		.addStringOption(option =>
 			option.setName('文字').setDescription('輸入你想像的一段文字').setRequired(true)),
 	async execute(interaction) {
 		await interaction.deferReply();
 		const prompt = interaction.options.getString('文字');
+		const inline = inlineCode('Prompt：' + prompt);
 		const translateprompt = await translate(prompt, { to: 'en' });
-		// const attachment = new AttachmentBuilder('./Data/Image/v1_txt2img_0.png');
-		// return interaction.editReply({ content: `${prompt}`, files: [attachment] });
 		if (!apiKey) {
 			return interaction.editReply('發生錯誤，請稍後再試');
 		}
@@ -47,9 +46,9 @@ module.exports = {
 		}
 		const responseJSON = await response.json();
 		responseJSON.artifacts.forEach((image, index) => {
-			fs.writeFileSync(`./Data/Image/v1_txt2img_${responseJSON.artifacts.seed}_${index}.png`, Buffer.from(image.base64, 'base64'));
-			const attachment = new AttachmentBuilder(`./Data/Image/v1_txt2img_${responseJSON.artifacts.seed}_${index}.png`);
-			return interaction.editReply({ content: `${prompt}`, files: [attachment] });
+			fs.writeFileSync(`./Data/Image/v1_txt2img_${interaction.id}_${index}.png`, Buffer.from(image.base64, 'base64'));
+			const attachment = new AttachmentBuilder(`./Data/Image/v1_txt2img_${interaction.id}_${index}.png`);
+			return interaction.editReply({ content: `<@${interaction.user.id}> ${inline}`, files: [attachment] });
 		});
 	},
 };

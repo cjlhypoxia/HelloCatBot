@@ -1,5 +1,5 @@
 const { Events, Collection } = require('discord.js');
-
+const settingSchema = require('../../Models/setting.js');
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction, client) {
@@ -11,7 +11,6 @@ module.exports = {
 			console.error(`No command matching ${interaction.commandName} was found.`);
 			return;
 		}
-
 		const { cooldowns } = interaction.client;
 		if (!cooldowns.has(command.data.name)) {
 			cooldowns.set(command.data.name, new Collection());
@@ -33,17 +32,38 @@ module.exports = {
 		timestamps.set(interaction.user.id, now);
 		setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
 
-
-		try {
-			await command.execute(interaction, client);
-		}
-		catch (error) {
-			console.error(error);
-			if (interaction.replied || interaction.deferred) {
-				await interaction.followUp({ content: `執行指令時發生錯誤請私訊 <@${botonwer}>`, ephemeral: true });
+		const { guildId } = interaction;
+		await settingSchema.find({ Guild: guildId }).then(async (data) => {
+			if (data.length == 0) {
+				exe();
 			}
-			else {
-				await interaction.reply({ content: `執行指令時發生錯誤請私訊 <@${botonwer}>`, ephemeral: true });
+			else if (data[0].Command.length > 0) {
+				const arr = data[0].Command;
+				if (arr.includes(command.data.name)) {
+					return interaction.reply({ content: `此指令**/${command.data.name}**目前無法使用。`, ephemeral: true });
+				}
+				else {
+					exe();
+				}
+			}
+			else if (data[0].Command.length == 0) {
+				exe();
+			}
+		}).catch((err) => console.log(err));
+
+
+		async function exe() {
+			try {
+				await command.execute(interaction, client);
+			}
+			catch (error) {
+				console.error(error);
+				if (interaction.replied || interaction.deferred) {
+					await interaction.followUp({ content: `執行指令時發生錯誤請私訊 <@${botonwer}>`, ephemeral: true });
+				}
+				else {
+					await interaction.reply({ content: `執行指令時發生錯誤請私訊 <@${botonwer}>`, ephemeral: true });
+				}
 			}
 		}
 	},

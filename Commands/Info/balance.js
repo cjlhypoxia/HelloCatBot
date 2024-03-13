@@ -8,7 +8,7 @@ module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('balance')
-		.setDescription('看看還可以使用毛毛多少錢'),
+		.setDescription('看看還可以使用毛毛多少錢去玩以文生圖'),
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 		if (!apiKey) {
@@ -29,7 +29,7 @@ module.exports = {
 			.setColor('Random')
 			.setTimestamp()
 			.addFields(
-				{ name: '還有', value: `\`${balance.credits}\` 可使用` },
+				{ name: '還有', value: `\`${balance.credits}\` 可使用於以文生圖` },
 			);
 		return interaction.editReply({ embeds:[embed] });
 	},

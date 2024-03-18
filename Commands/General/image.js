@@ -71,7 +71,7 @@ module.exports = {
 		}
 		const responseJSON = await response.json();
 		responseJSON.artifacts.forEach((image, index) => {
-			fs.writeFileSync(`./Data/Image/v1_txt2img_${interaction.id}_${index}.png`, Buffer.from(image.base64, 'base64'));
+			fs.writeFileSync(`./Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`, Buffer.from(image.base64, 'base64'));
 			const attachment = new AttachmentBuilder(`./Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`);
 			return interaction.editReply({ content: `<@${interaction.user.id}> ${inline}`, files: [attachment] });
 		});

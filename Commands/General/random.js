@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, AttachmentBuilder, inlineCode } = require('discord.js');
+const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const fs = require('fs');
 module.exports = {
 	cooldown: 5,
@@ -49,8 +49,21 @@ module.exports = {
 				randomvalue = Math.floor(Math.random() * filterfile.length);
 				attachment_url = filterfile[randomvalue];
 			}
-			const attachment = new AttachmentBuilder(`./Data/Image/${attachment_url}`);
-			return interaction.editReply({ content: `Style : ${style}`, files: [attachment] });
+			const image = new AttachmentBuilder(`./Data/Image/${attachment_url}`);
+			const embed = new EmbedBuilder()
+				.setTitle('Random txt2img')
+				.setColor('Random')
+				.setTimestamp()
+				.setImage(`attachment://${attachment_url}`)
+				.addFields(
+					{ name: 'Author', value: 'someone', inline: true },
+					{ name: 'Prompt', value: 'somthing', inline: true },
+					{ name: 'Style', value: style, inline: false },
+				);
+			const action = new ButtonBuilder()
+				.setLabel('Download').setURL('https://www.youtube.com/watch?v=o1sQ2kTKUB0').setStyle('Link').setEmoji('⬇️').setDisabled(true);
+			const row = new ActionRowBuilder().addComponents(action);
+			return interaction.editReply({ embeds: [embed], files:[image], components: [row] });
 		});
 	},
 };

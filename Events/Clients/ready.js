@@ -14,9 +14,9 @@ module.exports = {
 		client.user.setPresence({ status: 'dnd' });
 		client.user.setActivity('試試 /gemini', { type: ActivityType.Playing });
 		console.log(`Ready! ${client.user.tag} 上線`);
-		const pathfile = path.resolve('./Data/Avatar/', 'giphy.gif');
-		const avatargif = fs.readFileSync(pathfile);
-		const avatar = Buffer.from(avatargif);
-		await client.user.setAvatar(avatar);
+		// const pathfile = path.resolve('./Data/Avatar/', 'giphy.gif');
+		// const avatargif = fs.readFileSync(pathfile);
+		// const avatar = Buffer.from(avatargif);
+		// await client.user.setAvatar(avatar);
 	},
 };

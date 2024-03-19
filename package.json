@@ -12,6 +12,8 @@
     "@google/generative-ai": "^0.2.1",
     "@iamtraction/google-translate": "github:iamtraction/google-translate",
     "ascii-table": "^0.0.9",
+    "axios": "^1.6.8",
+    "crypto": "^1.0.1",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "mongoose": "^8.2.0",

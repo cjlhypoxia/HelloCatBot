@@ -61,7 +61,7 @@ module.exports = {
 					{ name: 'Style', value: style, inline: false },
 				);
 			const action = new ButtonBuilder()
-				.setLabel('Download').setURL('https://www.youtube.com/watch?v=o1sQ2kTKUB0').setStyle('Link').setEmoji('⬇️').setDisabled(true);
+				.setLabel('儲存圖片').setURL(`http://168.138.212.23/Data/Image/${attachment_url}`).setStyle('Link').setEmoji('⬇️');
 			const row = new ActionRowBuilder().addComponents(action);
 			return interaction.editReply({ embeds: [embed], files:[image], components: [row] });
 		});

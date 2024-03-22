@@ -2,13 +2,22 @@
 const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js');
 const dotenv = require('dotenv');
 dotenv.config();
-
+const { DisTube } = require('distube');
+const { SpotifyPlugin } = require('@distube/spotify');
 const { loadEvents } = require('./Handlers/eventHandler');
 const { loadCommands } = require('./Handlers/commandHandler');
 // Create a new client instance
 const client = new Client({
 	intents: [Object.keys(GatewayIntentBits)],
 	partials: [Object.keys(Partials)],
+});
+
+client.distube = new DisTube(client, {
+	emitNewSongOnly: true,
+	leaveOnFinish: true,
+	leaveOnEmpty: false,
+	emitAddSongWhenCreatingQueue: true,
+	plugins: [new SpotifyPlugin()],
 });
 // Commands
 client.cooldowns = new Collection();

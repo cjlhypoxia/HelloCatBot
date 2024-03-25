@@ -1,7 +1,8 @@
-const { SlashCommandBuilder, AttachmentBuilder, inlineCode } = require('discord.js');
+const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const translate = require('@iamtraction/google-translate');
 /* eslint-disable no-shadow */
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const path = require('path');
 const fs = require('fs');
 const engineId = 'stable-diffusion-xl-1024-v1-0';
 const url = `https://api.stability.ai/v1/generation/${engineId}/text-to-image`;
@@ -39,7 +40,6 @@ module.exports = {
 		await interaction.deferReply();
 		const prompt = interaction.options.getString('文字');
 		const style = interaction.options.getString('風格');
-		const inline = inlineCode('Prompt：' + prompt + `\nStyle：${style}`);
 		const translateprompt = await translate(prompt, { to: 'en' });
 		if (!apiKey) {
 			return interaction.editReply('發生錯誤，請稍後再試');
@@ -73,7 +73,31 @@ module.exports = {
 		responseJSON.artifacts.forEach((image, index) => {
 			fs.writeFileSync(`./Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`, Buffer.from(image.base64, 'base64'));
 			const attachment = new AttachmentBuilder(`./Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`);
-			return interaction.editReply({ content: `<@${interaction.user.id}> ${inline}`, files: [attachment] });
+			const embed = new EmbedBuilder()
+				.setTitle('txt2img')
+				.setColor('Random')
+				.setTimestamp()
+				.setImage(`attachment://v1_txt2img_${interaction.id}_${index}_${style}.png`)
+				.addFields(
+					{ name: 'Author', value: `<@${interaction.user.id}>`, inline: true },
+					{ name: 'Prompt', value: `\`${prompt}\``, inline: true },
+					{ name: 'Style', value: `\`${style}\``, inline: false },
+				);
+			const action = new ButtonBuilder()
+				.setLabel('儲存圖片').setURL(`http://168.138.212.23/Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`).setStyle('Link').setEmoji('⬇️');
+			const row = new ActionRowBuilder().addComponents(action);
+			return interaction.editReply({ embeds: [embed], files:[attachment], components: [row] });
 		});
+		const pathfile = path.resolve('./Data/Prompt', `${interaction.guild.id}_txt2image.json`);
+		if (fs.existsSync(pathfile)) {
+			const txt2img_json = require(`../../Data/Prompt/${interaction.guild.id}_txt2image.json`);
+			txt2img_json.data.push({ id: interaction.id, author : interaction.user.id, prompt : prompt, style : style });
+			const new_txt2image_json = JSON.stringify(txt2img_json);
+			return fs.writeFileSync(`./Data/Prompt/${interaction.guild.id}_txt2image.json`, new_txt2image_json);
+		}
+		else {
+			const data = { 'data' : [{ id: interaction.id, author: interaction.user.id, prompt: prompt, style: style }] };
+			return fs.writeFileSync(path.resolve('./Data/Prompt', `${interaction.guild.id}_txt2image.json`), JSON.stringify(data));
+		}
 	},
 };

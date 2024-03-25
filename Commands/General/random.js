@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const fs = require('fs');
+const path = require('path');
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
@@ -49,21 +50,72 @@ module.exports = {
 				randomvalue = Math.floor(Math.random() * filterfile.length);
 				attachment_url = filterfile[randomvalue];
 			}
-			const image = new AttachmentBuilder(`./Data/Image/${attachment_url}`);
-			const embed = new EmbedBuilder()
-				.setTitle('Random txt2img')
-				.setColor('Random')
-				.setTimestamp()
-				.setImage(`attachment://${attachment_url}`)
-				.addFields(
-					{ name: 'Author', value: 'someone', inline: true },
-					{ name: 'Prompt', value: 'somthing', inline: true },
-					{ name: 'Style', value: style, inline: false },
-				);
-			const action = new ButtonBuilder()
-				.setLabel('儲存圖片').setURL(`http://168.138.212.23/Data/Image/${attachment_url}`).setStyle('Link').setEmoji('⬇️');
-			const row = new ActionRowBuilder().addComponents(action);
-			return interaction.editReply({ embeds: [embed], files:[image], components: [row] });
+			const pathfile = path.resolve('./Data/Prompt', `${interaction.guild.id}_txt2image.json`);
+			if (fs.existsSync(pathfile)) {
+				fs.readFile(`./Data/Prompt/${interaction.guild.id}_txt2image.json`, 'utf8', (err, data) => {
+					if (err) {
+						return interaction.editReply({ content : '發生錯誤 reading file', ephemeral: true });
+					}
+					try {
+						const jsonData = JSON.parse(data);
+						const filteredData = jsonData.data.filter(item => attachment_url.includes(item.id));
+						const image = new AttachmentBuilder(`./Data/Image/${attachment_url}`);
+						if (filteredData.length == 0) {
+							const embed = new EmbedBuilder()
+								.setTitle('Random txt2img')
+								.setColor('Random')
+								.setTimestamp()
+								.setImage(`attachment://${attachment_url}`)
+								.addFields(
+									{ name: 'Author', value: '無資料', inline: true },
+									{ name: 'Prompt', value: '\`無資料\`', inline: true },
+									{ name: 'Style', value: `\`${style}\``, inline: false },
+								);
+							const action = new ButtonBuilder()
+								.setLabel('儲存圖片').setURL(`http://168.138.212.23/Data/Image/${attachment_url}`).setStyle('Link').setEmoji('⬇️');
+							const row = new ActionRowBuilder().addComponents(action);
+							return interaction.editReply({ embeds: [embed], files:[image], components: [row] });
+						}
+						else {
+							const embed = new EmbedBuilder()
+								.setTitle('Random txt2img')
+								.setColor('Random')
+								.setTimestamp()
+								.setImage(`attachment://${attachment_url}`)
+								.addFields(
+									{ name: 'Author', value: `<@${filteredData[0].author}>`, inline: true },
+									{ name: 'Prompt', value: `\`${filteredData[0].prompt}\``, inline: true },
+									{ name: 'Style', value: `\`${filteredData[0].style}\``, inline: false },
+								);
+							const action = new ButtonBuilder()
+								.setLabel('儲存圖片').setURL(`http://168.138.212.23/Data/Image/${attachment_url}`).setStyle('Link').setEmoji('⬇️');
+							const row = new ActionRowBuilder().addComponents(action);
+							return interaction.editReply({ embeds: [embed], files:[image], components: [row] });
+						}
+					}
+					catch (parseError) {
+						console.log(parseError);
+						return interaction.editReply({ content : '發生錯誤 parseError', ephemeral: true });
+					}
+				});
+			}
+			else {
+				const image = new AttachmentBuilder(`./Data/Image/${attachment_url}`);
+				const embed = new EmbedBuilder()
+					.setTitle('Random txt2img')
+					.setColor('Random')
+					.setTimestamp()
+					.setImage(`attachment://${attachment_url}`)
+					.addFields(
+						{ name: 'Author', value: '無資料', inline: true },
+						{ name: 'Prompt', value: '\`無資料\`', inline: true },
+						{ name: 'Style', value: `\`${style}\``, inline: false },
+					);
+				const action = new ButtonBuilder()
+					.setLabel('儲存圖片').setURL(`http://168.138.212.23/Data/Image/${attachment_url}`).setStyle('Link').setEmoji('⬇️');
+				const row = new ActionRowBuilder().addComponents(action);
+				return interaction.editReply({ embeds: [embed], files:[image], components: [row] });
+			}
 		});
 	},
 };

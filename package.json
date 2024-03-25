@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
-    "@distube/spotify": "^1.6.0",
     "@distube/ytsr": "^2.0.0",
     "@google/generative-ai": "^0.2.1",
     "@iamtraction/google-translate": "github:iamtraction/google-translate",

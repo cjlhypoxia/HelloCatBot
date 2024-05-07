@@ -68,6 +68,7 @@ module.exports = {
 								.setImage(`attachment://${attachment_url}`)
 								.addFields(
 									{ name: 'Author', value: '無資料', inline: true },
+									// eslint-disable-next-line no-useless-escape
 									{ name: 'Prompt', value: '\`無資料\`', inline: true },
 									{ name: 'Style', value: `\`${style}\``, inline: false },
 								);
@@ -108,6 +109,7 @@ module.exports = {
 					.setImage(`attachment://${attachment_url}`)
 					.addFields(
 						{ name: 'Author', value: '無資料', inline: true },
+						// eslint-disable-next-line no-useless-escape
 						{ name: 'Prompt', value: '\`無資料\`', inline: true },
 						{ name: 'Style', value: `\`${style}\``, inline: false },
 					);

@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 const {	GoogleGenerativeAI,	HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 const MODEL_NAME = 'gemini-1.0-pro';
+// const MODEL_NAME = 'gemini-1.5-pro-latest';
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -33,11 +35,17 @@ module.exports = {
 				const genAI = new GoogleGenerativeAI(process.env.GoogleAIApi);
 				const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 				const prompt_json = require(`../../Data/Prompt/${user.id}_prompt.json`);
-				const generationConfig = {
+				/* const generationConfig = {
 					temperature: 0.9,
 					topK: 1,
 					topP: 1,
 					maxOutputTokens: 2048,
+				};**/
+				const generationConfig = {
+					temperature: 1,
+					topK: 0,
+					topP: 0.95,
+					maxOutputTokens: 8192,
 				};
 
 				const safetySettings = [
@@ -58,9 +66,11 @@ module.exports = {
 						threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
 					},
 				];
+				const system_instruction = '盡量使用繁體中文回應，熱心助人的AI。';
 				const chat = model.startChat({
 					generationConfig,
 					safetySettings,
+					system_instruction,
 					history: prompt_json.message,
 				/** {
 						role: 'user',

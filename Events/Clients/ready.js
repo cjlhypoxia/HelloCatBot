@@ -1,7 +1,7 @@
 const { Events, ActivityType } = require('discord.js');
 const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const mongodb = process.env.mongodb;
 
 mongoose.set('strictQuery', false);

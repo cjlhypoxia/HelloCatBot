@@ -5,6 +5,7 @@ module.exports = {
 		.setName('resume')
 		.setDescription('繼續播放音樂'),
 	async execute(interaction) {
+		// eslint-disable-next-line no-unused-vars
 		const { options, member, guild, channel } = interaction;
 		const voiceChannel = member.voice.channel;
 		const embed = new EmbedBuilder();

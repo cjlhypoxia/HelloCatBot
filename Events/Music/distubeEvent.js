@@ -10,7 +10,7 @@ const button = new ActionRowBuilder().setComponents(
 const status = queue =>
 	`音量： \`${queue.volume}%\` | 音樂過濾： \`${queue.filters.names.join(', ') || '關閉'}\` | 循環： \`${queue.repeatMode ? (queue.repeatMode === 2 ? '全部歌曲' : '此首歌曲') : '關閉'
 	}\` | 自動播放： \`${queue.autoplay ? '開啟' : '關閉'}\``;
-client.distube
+
 /** .on('playSong', (queue, song) =>
         queue.textChannel.send({
             embeds: [new EmbedBuilder().setColor("Green")
@@ -18,6 +18,7 @@ client.distube
                     }\n${status(queue)}`)]
         })
     )*/
+client.distube
 	.on('playSong', (queue, song) =>
 		client.user.setActivity(` ${song.name}`, { type: ActivityType.Listening }),
 	)
@@ -26,6 +27,7 @@ client.distube
 			return;
 		}
 		else {
+			queue.setVolume(30);
 			queue.textChannel.send(
 				{
 					embeds: [new EmbedBuilder().setColor('Green')
@@ -72,6 +74,8 @@ client.distube
 			.setDescription('🏁 | 歌曲播放完畢！')],
 	}),
 	client.user.setActivity('/play | /gemini', { type: ActivityType.Playing }),
+	)
+	.on('finish', () => client.user.setActivity('/play | /gemini', { type: ActivityType.Playing }),
 	);
 // .on('finish', queue => client.user.setActivity('/play | /help', { type: ActivityType.Playing }),
 // );

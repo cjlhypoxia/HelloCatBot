@@ -71,7 +71,7 @@ client.distube
 		embeds: [new EmbedBuilder().setColor('Green')
 			.setDescription('🏁 | 歌曲播放完畢！')],
 	}),
-	client.user.setActivity('/play | /help', { type: ActivityType.Playing }),
+	client.user.setActivity('/play | /gemini', { type: ActivityType.Playing }),
 	);
 // .on('finish', queue => client.user.setActivity('/play | /help', { type: ActivityType.Playing }),
 // );

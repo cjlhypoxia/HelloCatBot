@@ -5,7 +5,7 @@ const fs = require('fs');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('setting')
-		.setDescription('功能設定')
+		.setDescription('功能設定（僅限伺服器擁有者）')
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('gemini頻道設定')

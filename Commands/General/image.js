@@ -74,10 +74,11 @@ module.exports = {
 			fs.writeFileSync(`./Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`, Buffer.from(image.base64, 'base64'));
 			const attachment = new AttachmentBuilder(`./Data/Image/v1_txt2img_${interaction.id}_${index}_${style}.png`);
 			const embed = new EmbedBuilder()
-				.setTitle('txt2img')
+				.setTitle('以文生圖')
 				.setColor('Random')
 				.setTimestamp()
 				.setImage(`attachment://v1_txt2img_${interaction.id}_${index}_${style}.png`)
+				.setFooter({ text: 'Stability AI', iconURL: 'https://beta.dreamstudio.ai/logo.png' })
 				.addFields(
 					{ name: 'Author', value: `<@${interaction.user.id}>`, inline: true },
 					{ name: 'Prompt', value: `\`${prompt}\``, inline: true },
